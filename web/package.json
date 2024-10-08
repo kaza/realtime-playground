@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build:debug": "next build --no-lint",
-    "start": "next start -p $PORT" //,
-    //"postinstall": "next build"
+    "start": "next start -p $PORT" 
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 import {
   TrackToggle,
-  useKrispNoiseFilter,
+  // useKrispNoiseFilter,
   useLocalParticipant,
   useMediaDeviceSelect,
 } from "@livekit/components-react";
@@ -34,8 +34,7 @@ export function SessionControls() {
     9,
   );
   const [isMuted, setIsMuted] = useState(localParticipant.isMicrophoneEnabled);
-  const { isNoiseFilterEnabled, isNoiseFilterPending, setNoiseFilterEnabled } =
-    useKrispNoiseFilter();
+  //const { isNoiseFilterEnabled, isNoiseFilterPending, setNoiseFilterEnabled } = useKrispNoiseFilter();
   useEffect(() => {
     setIsMuted(localParticipant.isMicrophoneEnabled === false);
   }, [localParticipant.isMicrophoneEnabled]);
@@ -102,16 +101,7 @@ export function SessionControls() {
             <DropdownMenuLabel className="text-xs uppercase tracking-widest">
               Audio Settings
             </DropdownMenuLabel>
-            <DropdownMenuCheckboxItem
-              className="text-xs"
-              checked={isNoiseFilterEnabled}
-              onCheckedChange={async (checked) => {
-                setNoiseFilterEnabled(checked);
-              }}
-              disabled={isNoiseFilterPending}
-            >
-              Enhanced Noise Filter
-            </DropdownMenuCheckboxItem>
+           
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

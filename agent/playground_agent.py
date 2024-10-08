@@ -1,12 +1,13 @@
 from __future__ import annotations
-
+from datetime import datetime
 import asyncio
 import json
 import logging
 import uuid
 from dataclasses import asdict, dataclass
-from typing import Any, Dict
+from typing import Any, Dict, Annotated
 
+import aiohttp
 from livekit import rtc
 from livekit.agents import (
     AutoSubscribe,
@@ -48,6 +49,41 @@ class SessionConfig:
         }
         return modalities_map.get(modalities, ["text", "audio"])
 
+
+class AssistantFnc(llm.FunctionContext):
+    """
+    The class defines a set of LLM functions that the assistant can execute.
+    """
+
+    @llm.ai_callable()
+    async def get_weather(
+        self,
+        location: Annotated[
+            str, llm.TypeInfo(description="The location to get the weather for")
+        ],
+    ):
+        """Called when the user asks about the weather. This function will return the weather for the given location."""
+        logger.info(f"getting weather for {location}")
+        print(f"xxxxxxxxxxxxxxxxxx calling weather api {location}")
+        url = f"https://wttr.in/{location}?format=%C+%t"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status == 200:
+                    weather_data = await response.text()
+                    # response from the function call is returned to the LLM
+                    return f"The weather in {location} is {weather_data}."
+                else:
+                    raise f"Failed to get weather data, status code: {response.status}"
+
+    @llm.ai_callable( description="Called when the user asks about the current time")
+    async def get_current_time(
+            self
+
+    ):
+
+        logger.info(f"xxxxxx   getting current time ")
+        current_time = datetime.now().strftime("%H:%M:%S")
+        return "Current time is : "+ current_time
 
 def parse_session_config(data: Dict[str, Any]) -> SessionConfig:
     turn_detection = None
@@ -101,7 +137,8 @@ def run_multimodal_agent(ctx: JobContext, participant: rtc.Participant):
         modalities=config.modalities,
         turn_detection=config.turn_detection,
     )
-    assistant = MultimodalAgent(model=model)
+    fnc_ctx = AssistantFnc()  # create our fnc ctx instance
+    assistant = MultimodalAgent(model=model, fnc_ctx=fnc_ctx)
     assistant.start(ctx.room)
     session = model.sessions[0]
 

@@ -23,7 +23,7 @@ jobs:
           cd web
           npm install
           npm install @livekit/components-react@latest
-          npm run build --verbose
+          npm run build:debug --verbose
           
 
       - name: Zip artifact for deployment

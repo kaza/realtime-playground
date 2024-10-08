@@ -58,7 +58,6 @@ export function ConfigurationForm() {
   const updateConfig = useCallback(() => {
     const values = pgState.sessionConfig;
     const attributes: { [key: string]: string } = {
-      instructions: pgState.instructions,
       voice: values.voice,
       turn_detection: JSON.stringify({
         type: values.turnDetection,
@@ -112,7 +111,7 @@ export function ConfigurationForm() {
           });
         }
       });
-  }, [pgState.sessionConfig, pgState.instructions, localParticipant, toast]);
+  }, [pgState.sessionConfig, localParticipant, toast]);
 
   // Function to debounce updates when user stops interacting
   const handleDebouncedUpdate = useCallback(() => {

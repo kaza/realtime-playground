@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Instructions } from "@/components/instructions";
 import { SessionControls } from "@/components/session-controls";
 import { ConnectButton } from "./connect-button";
 import { ConnectionState } from "livekit-client";
@@ -119,15 +118,9 @@ export function Chat() {
       <div className="flex flex-col flex-grow items-center lg:justify-between mt-12 lg:mt-0">
         <div className="w-full h-full flex flex-col">
           <div className="flex items-center justify-center w-full">
-            <div className="lg:hidden w-full">
-              {isChatRunning && !isEditingInstructions ? (
-                renderVisualizer()
-              ) : (
-                <Instructions />
-              )}
-            </div>
-            <div className="hidden lg:block w-full">
-              <Instructions />
+            <div className="w-full text-center p-4">
+              <h2 className="text-2xl font-semibold mb-2">Welcome to the AI Chat</h2>
+              <p className="text-lg">Click connect and start speaking to interact with the AI.</p>
             </div>
           </div>
           <div className="grow h-full flex items-center justify-center">

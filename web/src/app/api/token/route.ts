@@ -1,10 +1,15 @@
 import { AccessToken } from "livekit-server-sdk";
 import { PlaygroundState } from "@/data/playground-state";
 
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+if (!OPENAI_API_KEY) {
+  throw new Error("OPENAI_API_KEY must be set in the environment variables");
+}
+
 export async function POST(request: Request) {
   const {
     instructions,
-    openaiAPIKey,
     sessionConfig: {
       turnDetection,
       modalities,
@@ -15,7 +20,7 @@ export async function POST(request: Request) {
       vadSilenceDurationMs,
       vadPrefixPaddingMs,
     },
-  }: PlaygroundState = await request.json();
+  }: Omit<PlaygroundState, 'openaiAPIKey'> = await request.json();
 
   const roomName = Math.random().toString(36).substring(7);
   const apiKey = process.env.LIVEKIT_API_KEY;
@@ -32,7 +37,7 @@ export async function POST(request: Request) {
       voice: voice,
       temperature: temperature,
       max_output_tokens: maxOutputTokens,
-      openai_api_key: openaiAPIKey,
+      openai_api_key: OPENAI_API_KEY,
       turn_detection: JSON.stringify({
         type: turnDetection,
         threshold: vadThreshold,

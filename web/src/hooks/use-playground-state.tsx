@@ -173,14 +173,6 @@ export const PlaygroundStateProvider = ({
   const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   useEffect(() => {
-    const storedKey = localStorage.getItem(LS_OPENAI_API_KEY_NAME);
-    if (storedKey && storedKey.length >= 1) {
-      dispatch({ type: "SET_API_KEY", payload: storedKey });
-    } else {
-      dispatch({ type: "SET_API_KEY", payload: null });
-      setShowAuthDialog(true);
-    }
-
     // Load presets from localStorage
     const storedPresets = localStorage.getItem(LS_USER_PRESETS_KEY);
     const userPresets = storedPresets ? JSON.parse(storedPresets) : [];

@@ -10,19 +10,12 @@ import { AuthDialog } from "./auth";
 export function ConnectButton() {
   const { connect, disconnect, shouldConnect } = useConnection();
   const [connecting, setConnecting] = useState<boolean>(false);
-  const { pgState } = usePlaygroundState();
-  const [showAuthDialog, setShowAuthDialog] = useState(false);
-  const [initiateConnectionFlag, setInitiateConnectionFlag] = useState(false);
 
   const handleConnectionToggle = async () => {
     if (shouldConnect) {
       await disconnect();
     } else {
-      if (!pgState.openaiAPIKey) {
-        setShowAuthDialog(true);
-      } else {
-        await initiateConnection();
-      }
+      await initiateConnection();
     }
   };
 
@@ -37,42 +30,23 @@ export function ConnectButton() {
     }
   }, [connect]);
 
-  const handleAuthComplete = () => {
-    setShowAuthDialog(false);
-    setInitiateConnectionFlag(true);
-  };
-
-  useEffect(() => {
-    if (initiateConnectionFlag && pgState.openaiAPIKey) {
-      initiateConnection();
-      setInitiateConnectionFlag(false);
-    }
-  }, [initiateConnectionFlag, initiateConnection, pgState.openaiAPIKey]);
-
   return (
-    <>
-      <Button
-        onClick={handleConnectionToggle}
-        disabled={connecting || shouldConnect}
-        className="text-sm font-semibold bg-oai-green"
-      >
-        {connecting || shouldConnect ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Connecting
-          </>
-        ) : (
-          <>
-            <Mic className="mr-2 h-4 w-4" />
-            Connect
-          </>
-        )}
-      </Button>
-      <AuthDialog
-        open={showAuthDialog}
-        onOpenChange={setShowAuthDialog}
-        onAuthComplete={handleAuthComplete}
-      />
-    </>
+    <Button
+      onClick={handleConnectionToggle}
+      disabled={connecting || shouldConnect}
+      className="text-sm font-semibold bg-oai-green"
+    >
+      {connecting || shouldConnect ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Connecting
+        </>
+      ) : (
+        <>
+          <Mic className="mr-2 h-4 w-4" />
+          Connect
+        </>
+      )}
+    </Button>
   );
 }

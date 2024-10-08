@@ -39,18 +39,18 @@ export const ConnectionProvider = ({
     voice: VoiceId;
   }>({ wsUrl: "", token: "", shouldConnect: false, voice: VoiceId.alloy });
 
-  const { pgState, dispatch } = usePlaygroundState();
+  const { pgState } = usePlaygroundState();
 
   const connect = async () => {
-    if (!pgState.openaiAPIKey) {
-      throw new Error("OpenAI API key is required to connect");
-    }
     const response = await fetch("/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(pgState),
+      body: JSON.stringify({
+        instructions: pgState.instructions,
+        sessionConfig: pgState.sessionConfig,
+      }),
     });
 
     if (!response.ok) {
@@ -71,23 +71,13 @@ export const ConnectionProvider = ({
     setConnectionDetails((prev) => ({ ...prev, shouldConnect: false }));
   }, []);
 
-  // Effect to handle API key changes
-  useEffect(() => {
-    if (pgState.openaiAPIKey === null && connectionDetails.shouldConnect) {
-      disconnect();
-    }
-  }, [pgState.openaiAPIKey, connectionDetails.shouldConnect, disconnect]);
-
   return (
     <ConnectionContext.Provider
       value={{
-        wsUrl: connectionDetails.wsUrl,
-        token: connectionDetails.token,
-        shouldConnect: connectionDetails.shouldConnect,
-        voice: connectionDetails.voice,
+        ...connectionDetails,
         pgState,
-        connect,
         disconnect,
+        connect,
       }}
     >
       {children}

@@ -65,5 +65,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'opeania-realtime-api'
-          slot-name: 'test'
+          slot-name: 'Production'
           package: release.zip

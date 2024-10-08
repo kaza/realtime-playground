@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build:debug": "next build --no-lint",
-    "start": "next start -p $PORT" 
+    "start": "next start -p $PORT" ,
+    "startAzure": "./node_modules/next/dist/bin/next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

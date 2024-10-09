@@ -13,7 +13,7 @@ on:
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
-
+  STARTUP_COMMAND: 'python playground_agent.py dev'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,16 +28,21 @@ jobs:
 
       - name: Create and start virtual environment
         run: |
+          cd agent
           python -m venv venv
           source venv/bin/activate
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          cd agent
+          pip install -r requirements.txt
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd agent
+          zip -r ../release.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -78,7 +83,7 @@ jobs:
         with:
           app-name: 'livekit-agent'
           slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: .
           scm-do-build-during-deployment: true
           enable-oryx-build: true
-          
+          startup-command: ${{ env.STARTUP_COMMAND }}

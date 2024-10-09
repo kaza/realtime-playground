@@ -31,7 +31,7 @@ export const defaultSessionConfig: SessionConfig = {
   transcriptionModel: TranscriptionModelId.whisper1,
   turnDetection: TurnDetectionTypeId.server_vad,
   modalities: ModalitiesId.text_and_audio,
-  voice: VoiceId.alloy,
+  voice: VoiceId.shimmer,
   temperature: 0.8,
   maxOutputTokens: null,
   vadThreshold: 0.5,

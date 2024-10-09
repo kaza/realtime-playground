@@ -8,11 +8,7 @@ const nextConfig = {
 
     return config; // Always return the modified config
   },
-  // Add this section
-  server: {
-    port: process.env.PORT || 8080,
-    host: '0.0.0.0'
-  }
+ 
 };
 
 export default nextConfig;

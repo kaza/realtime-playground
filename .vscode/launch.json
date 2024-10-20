@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: playground_agent.py dev",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/agent/playground_agent.py",
+            "args": ["dev"],
+            "console": "integratedTerminal"
+        }
+    ]
+}

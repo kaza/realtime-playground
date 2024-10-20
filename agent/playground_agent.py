@@ -20,6 +20,9 @@ from livekit.agents import (
 from livekit.agents.multimodal import MultimodalAgent
 from livekit.plugins import openai
 
+from clinician_service import get_clinician_info
+from typing import List, Optional
+
 logger = logging.getLogger("my-worker")
 logger.setLevel(logging.INFO)
 
@@ -55,6 +58,10 @@ class AssistantFnc(llm.FunctionContext):
     The class defines a set of LLM functions that the assistant can execute.
     """
 
+    def __init__(self):
+        super().__init__()
+
+
     @llm.ai_callable()
     async def get_weather(
         self,
@@ -85,6 +92,27 @@ class AssistantFnc(llm.FunctionContext):
         current_time = datetime.now().strftime("%H:%M:%S")
         return "Current time is : "+ current_time
 
+    @llm.ai_callable(description="Called when the user asks to find clinicians based on various criteria")
+    async def find_clinicians(
+        self,
+        offices: str = None,
+        groups: str = None,
+        modalities: str = None,
+        specialties: str = None,
+    ) -> str:
+        """Searches for clinicians based on offices, groups, modalities, and specialties."""
+        logger.info(f"Searching for clinicians with criteria: offices={offices}, groups={groups}, modalities={modalities}, specialties={specialties}")
+        
+        # Convert string inputs to lists if they're not None
+        offices_list = offices.split(',') if offices else None
+        groups_list = groups.split(',') if groups else None
+        modalities_list = modalities.split(',') if modalities else None
+        specialties_list = specialties.split(',') if specialties else None
+        
+        result = get_clinician_info(offices_list, groups_list, modalities_list, specialties_list)
+        logger.info(f"Clinician search result: {result}")
+        return result
+    
 def parse_session_config(data: Dict[str, Any]) -> SessionConfig:
     turn_detection = None
     
